@@ -5,7 +5,7 @@ import AppMain from './components/AppMain.vue';
 export default {
   components: {
     AppHeader,
-    AppMain,
+    AppMain
   }
 }
 </script>

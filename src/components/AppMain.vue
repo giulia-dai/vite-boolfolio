@@ -1,21 +1,26 @@
 <script>
+import { store } from '../store.js'
 import axios from 'axios';
+import AppPost from './AppPost.vue';
 
 export default {
     name: 'AppMain',
     data() {
         return {
             posts: [],
-            contentMaxLenght: 100,
-            baseUrl: 'http://localhost:8000',
+            contentMaxLenght: 50,
             currentPage: 1,
             lastPage: null,
+            store
 
         }
     },
+    components: {
+        AppPost
+    },
     methods: {
         getPosts(gotoPage) {
-            axios.get(`${this.baseUrl}/api/posts`,
+            axios.get(`${this.store.baseUrl}/api/posts`,
                 {
                     // richiedi la pagina corrente
                     params: {
@@ -30,11 +35,11 @@ export default {
 
                 });
         },
-        truncateText(text) {
-            if (text && text.lenght > this.contentMaxLenght) {
-                return text.substr(0, this.contentMaxLength) + '...';
+        truncateText(description) {
+            if (description && description.lenght > this.contentMaxLenght) {
+                return description.substr(0, this.contentMaxLenght) + '...';
             }
-            return text;
+            return description;
         }
     },
     mounted() {
@@ -47,22 +52,9 @@ export default {
     <div class="container">
         <div class="row">
             <div class="col-4" v-for="post in  posts ">
-
-                <div class="card">
-                    <img v-if="post.cover_img" :src="`${this.baseUrl}/storage/${post.cover_img}`" class="card-img-top">
-                    <img v-else src="https://icon-library.com/images/no-image-icon/no-image-icon-1.jpg"
-                        class="card-img-top" />
-
-                    <div class="card-body">
-                        <h5 class="card-title">{{ post.title }}</h5>
-                        <h6>Categoria: {{ post.type?.name }}</h6>
-                        <p class="card-text">{{ post.description }}</p>
-                        <!-- <a href="#" class="btn btn-primary">Vedi di più</a> -->
-                    </div>
-
-                </div>
-
+                <AppPost :post="post"></AppPost>
             </div>
+
 
             <!-- bottoni per la paginazione -->
             <nav aria-label="Page navigation example">
